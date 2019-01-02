@@ -1,0 +1,259 @@
+直接使用install执行复制后结果
+[zhangly@localhost install]$ install 1.txt 2.txt
+[zhangly@localhost install]$ ls
+1.txt  2.txt
+[zhangly@localhost install]$ ls -lrt
+总用量 8
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 15:40 2.txt
+===============
+install --help命令
+[zhangly@localhost install]$ install --help
+用法：install [选项]... [-T] 源文件 目标文件
+　或：install [选项]... 源文件... 目录
+　或：install [选项]... -t 目录 源文件...
+　或：install [选项]... -d 目录...
+
+This install program copies files (often just compiled) into destination
+locations you choose.  If you want to download and install a ready-to-use
+package on a GNU/Linux system, you should instead be using a package manager
+like yum(1) or apt-get(1).
+
+In the first three forms, copy SOURCE to DEST or multiple SOURCE(s) to
+the existing DIRECTORY, while setting permission modes and owner/group.
+In the 4th form, create all components of the given DIRECTORY(ies).
+
+Mandatory arguments to long options are mandatory for short options too.
+      --backup[=CONTROL]	为每个已存在的文件创建备份
+  -b			类似--backup 但不接受参数
+  -c			(忽略)
+  -C, --compare		比较每组源文件和目标文件，在一些情况下不修改目标文件
+  -d, --directory	将所有参数视为目录名称；为指定的目录创建所有组件
+  -D			创建目标目录的所有必要的父目录，然后将源文件复制至该目录
+  -g, --group=组	自行设置所属组，而不是进程目前的所属组
+  -m, --mode=模式	自行设置权限模式(像chmod)，而不是rwxr-xr-x
+  -o, --owner=所有者	自行设置所有者(只适用于超级用户)
+  -p, --preserve-timestamps	修改源文件的访问/修改时间以与目标文件保持一致
+  -s, --strip			拆解符号表
+      --strip-program=程序	指定拆解二进制文件的程序
+  -S, --suffix=后缀		覆盖常用备份文件后缀
+  -t, --target-directory=目录	将源文件所有参数复制到指定目录
+  -T, --no-target-directory	将目标文件视为普通文件
+  -v, --verbose			创建目录时显示其名称
+  -P, --preserve-context  preserve SELinux security context (-P deprecated)
+  -Z, --context[=CTX]     set SELinux security context of destination file to
+                            default type, or to CTX if specified
+      --help		显示此帮助信息并退出
+      --version		显示版本信息并退出
+
+The backup suffix is '~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.
+The version control method may be selected via the --backup option or through
+the VERSION_CONTROL environment variable.  Here are the values:
+
+  none, off       不进行备份(即使使用了--backup 选项)
+  numbered, t     备份文件加上数字进行排序
+  existing, nil   若有数字的备份文件已经存在则使用数字，否则使用普通方式备份
+  simple, never   永远使用普通方式备份
+
+GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
+请向<http://translationproject.org/team/zh_CN.html> 报告install 的翻译错误
+要获取完整文档，请运行：info coreutils 'install invocation'
+===============
+--backup输入参数的四种情况：
+       --backup[=CONTROL]
+              make a backup of each existing destination file
+       The backup suffix is '~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.  The version control method may be
+       selected via the --backup option or through the VERSION_CONTROL environment variable.  Here are the values:
+
+       none, off
+              never make backups (even if --backup is given)
+
+       numbered, t
+              make numbered backups
+
+       existing, nil
+              numbered if numbered backups exist, simple otherwise
+
+       simple, never
+              always make simple backups
+
+none,off-不备份，即便指定了--backup
+[zhangly@localhost install]$ install 1.txt 2.txt --backup=none
+[zhangly@localhost install]$ ls -lrt
+总用量 8
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:10 2.txt
+
+
+ numbered, t--按数字结尾备份
+[zhangly@localhost install]$ install 1.txt 2.txt --backup=t
+[zhangly@localhost install]$ ls -lrt
+总用量 12
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:10 2.txt.~1~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:11 2.txt
+
+existing, nil--数字备份已经存在，则按数字后缀继续备份，如果不存在则按简单方式，即默认波浪线
+zhangly@localhost install]$ ls -lrt
+总用量 20
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:10 2.txt.~1~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:11 2.txt.~2~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:12 2.txt.~3~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:12 2.txt
+[zhangly@localhost install]$ rm *~*
+[zhangly@localhost install]$ install 1.txt 2.txt --backup=nil
+[zhangly@localhost install]$ ls -lrt
+总用量 12
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:12 2.txt~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:12 2.txt
+
+simple, never--永远按简单方式波浪线备份：
+[zhangly@localhost install]$ ls -lrt
+总用量 12
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:12 2.txt.~1~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:15 2.txt
+[zhangly@localhost install]$ install 1.txt 2.txt --backup=simple
+[zhangly@localhost install]$ ls -lrt
+总用量 16
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:12 2.txt.~1~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:15 2.txt~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:15 2.txt
+simple, never--永远按简单方式波浪线备份：
+[zhangly@localhost install]$ ls -lrt
+总用量 12
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:12 2.txt.~1~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:15 2.txt
+[zhangly@localhost install]$ install 1.txt 2.txt --backup=simple
+[zhangly@localhost install]$ ls -lrt
+总用量 16
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:12 2.txt.~1~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:15 2.txt~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:15 2.txt
+
+多了一个波浪线备份
+
+====================
+-C, --compare --源文件和目标文件，在某些情况下，不改变目标
+这个没验证出来是那种情况目标文件不变：
+[zhangly@localhost install]$ install 1.txt 2.txt -c
+[zhangly@localhost install]$ ls -lrt
+总用量 28
+-rw-rw-r--. 1 zhangly zhangly 2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:12 2.txt.~1~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:15 2.txt~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:15 2.txt.~2~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:17 2.txt.~3~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:17 2.txt.~4~
+-rwxr-xr-x. 1 zhangly zhangly 2 1月   2 16:26 2.txt
+[zhangly@localhost install]$ ls --full-time 2.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 2019-01-02 16:26:26.546165317 +0800 2.txt
+[zhangly@localhost install]$ install 1.txt 2.txt -c
+[zhangly@localhost install]$ ls --full-time 2.txt
+-rwxr-xr-x. 1 zhangly zhangly 2 2019-01-02 16:26:53.3987666文件，在某些情况下，不改变目标
+
+=======================
+       -d, --directory
+              treat all arguments as directory names; create all components of the specified directories
+将所有输入的参数视为目录名，依次创建所有目录
+[zhangly@localhost install]$ install -d a/b c/d/e
+[zhangly@localhost install]$ tree .
+.
+|-- 1.txt
+|-- 2.txt
+|-- a
+|   `-- b
+`-- c
+    `-- d
+        `-- e
+
+5 directories, 2 files
+
+=========================
+-D     create all leading components of DEST except the last, then copy SOURCE to DEST
+将-D指定的参数，进行目录部分创建，再将最后一部分作为目标文件名，将源文件复制过去
+
+[zhangly@localhost install]$ install 1.txt -D d/e/3.txt
+[zhangly@localhost install]$ tree
+.
+|-- 1.txt
+|-- 2.txt
+|-- a
+|   `-- b
+|-- c
+|   `-- d
+|       `-- e
+`-- d
+    `-- e
+        `-- 3.txt
+
+7 directories, 3 files
+
+====================
+       -g, --group=GROUP
+              set group ownership, instead of process' current group
+将目标文件给当前用户所在的一个组
+[zhangly@localhost install]$ ls -lrt
+总用量 8
+-rw-rw-r--. 1 zhangly zhangly  2 12月 30 16:41 1.txt
+-rwxr-xr-x. 1 zhangly zhangly  2 1月   2 16:26 2.txt
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:39 a
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:39 c
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:56 d
+[zhangly@localhost install]$ id
+uid=1000(zhangly) gid=1000(zhangly) 组=1000(zhangly),10(wheel) 环境=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+[zhangly@localhost install]$ install -g wheel 1.txt 2.txt 
+[zhangly@localhost install]$ ls -lrt
+总用量 8
+-rw-rw-r--. 1 zhangly zhangly  2 12月 30 16:41 1.txt
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:39 a
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:39 c
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:56 d
+-rwxr-xr-x. 1 zhangly wheel    2 1月   2 17:09 2.txt
+
+=====================
+       -m, --mode=MODE
+              set permission mode (as in chmod), instead of rwxr-xr-x
+设置目标文件权限
+[zhangly@localhost install]$ install 1.txt 2.txt -m 000
+[zhangly@localhost install]$ ls -lrt
+总用量 8
+-rw-rw-r--. 1 zhangly zhangly  2 12月 30 16:41 1.txt
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:39 a
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:39 c
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:56 d
+----------. 1 zhangly zhangly  2 1月   2 17:11 2.txt
+
+==========================
+       -o, --owner=OWNER
+              set ownership (super-user only)
+设置文件所有者，只有超级用户能做操作。
+[root@localhost install]# install 1.txt 2.txt -o tcpdump
+[root@localhost install]# ls -lrt
+总用量 8
+-rw-rw-r--. 1 zhangly zhangly  2 12月 30 16:41 1.txt
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:39 a
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:39 c
+drwxr-xr-x. 3 zhangly zhangly 14 1月   2 16:56 d
+-rwxr-xr-x. 1 tcpdump root     2 1月   2 17:19 2.txt
+[root@localhost install]# rm -rf 2.txt 
+
+切换超级用户，把文件给tcpdump用户设置文件所有者，只有超级用户能做操作。
+===============================
+       -p, --preserve-timestamps
+              apply access/modification times of SOURCE files to corresponding destination files
+-p， –preserve-timestamp: 以<来源>文件的访问/修改时间作为相应的目的地文件的时间属性 
+[zhangly@localhost install]$ install 1.txt 2.txt -p
+[zhangly@localhost install]$ ls -lrt --full-time
+总用量 8
+-rwxr-xr-x. 1 zhangly zhangly  2 2018-12-30 16:41:57.494767166 +0800 2.txt
+-rw-rw-r--. 1 zhangly zhangly  2 2018-12-30 16:41:57.494767166 +0800 1.txt
+drwxr-xr-x. 3 zhangly zhangly 14 2019-01-02 16:39:58.298126451 +0800 a
+drwxr-xr-x. 3 zhangly zhangly 14 2019-01-02 16:39:58.299129194 +0800 c
+drwxr-xr-x. 3 zhangly zhangly 14 2019-01-02 16:56:33.975214738 +0800 d
+
