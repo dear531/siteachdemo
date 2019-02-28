@@ -417,8 +417,7 @@ lrwxrwxrwx. 1 zhangly zhangly    3 2月  28 17:26 1l.o -> 1.o
 未探究
 
 ===============================
-       -Z, --context[=CTX]
-              set SELinux security context of destination file to default type, or to CTX if specified
+-Z CONTEXT, –context=CONTEXT: 设置要用于任何创建的文件和目录的默认SELinux安全上下文。 如果SELinux被禁用，则打印警告并忽略该选项
 未探究
 
 ===============================
