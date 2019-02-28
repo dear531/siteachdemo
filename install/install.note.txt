@@ -257,3 +257,169 @@ drwxr-xr-x. 3 zhangly zhangly 14 2019-01-02 16:39:58.298126451 +0800 a
 drwxr-xr-x. 3 zhangly zhangly 14 2019-01-02 16:39:58.299129194 +0800 c
 drwxr-xr-x. 3 zhangly zhangly 14 2019-01-02 16:56:33.975214738 +0800 d
 
+===============================
+
+-s, –strip: 用strip命令删除symbol table,只适用于第一及第二种格式
+其中符号表就是objdump -t对工程文件.o文件时显示的符号表
+
+
+将1.c内容编译成1.o
+
+[zhangly@localhost hgfs]$ cat 1.c 
+#include <stdio.h>
+
+int add(int m, int n)
+{
+	return m + n;
+}
+
+int main(void)
+{
+	return 0;
+}
+
+[zhangly@localhost hgfs]$ gcc -c 1.c -o 1.o
+
+加-s选项1.o 与 复制后的2.o区别如下：
+
+[zhangly@localhost hgfs]$ install -s 1.o 2.o
+[zhangly@localhost hgfs]$ objdump -t 1.o
+
+1.o：     文件格式 elf64-x86-64
+
+SYMBOL TABLE:
+0000000000000000 l    df *ABS*	0000000000000000 1.c
+0000000000000000 l    d  .text	0000000000000000 .text
+0000000000000000 l    d  .data	0000000000000000 .data
+0000000000000000 l    d  .bss	0000000000000000 .bss
+0000000000000000 l    d  .note.GNU-stack	0000000000000000 .note.GNU-stack
+0000000000000000 l    d  .eh_frame	0000000000000000 .eh_frame
+0000000000000000 l    d  .comment	0000000000000000 .comment
+0000000000000000 g     F .text	0000000000000014 add
+0000000000000014 g     F .text	000000000000000b main
+
+
+[zhangly@localhost hgfs]$ objdump -t 2.o
+
+2.o：     文件格式 elf64-x86-64
+
+SYMBOL TABLE:
+no symbols
+
+
+如不加-s直接复制，则2.o符号表如下，与1.o完全一致：
+
+[zhangly@localhost hgfs]$ install 1.o 2.o
+[zhangly@localhost hgfs]$ objdump -t 2.o
+
+2.o：     文件格式 elf64-x86-64
+
+SYMBOL TABLE:
+0000000000000000 l    df *ABS*	0000000000000000 1.c
+0000000000000000 l    d  .text	0000000000000000 .text
+0000000000000000 l    d  .data	0000000000000000 .data
+0000000000000000 l    d  .bss	0000000000000000 .bss
+0000000000000000 l    d  .note.GNU-stack	0000000000000000 .note.GNU-stack
+0000000000000000 l    d  .eh_frame	0000000000000000 .eh_frame
+0000000000000000 l    d  .comment	0000000000000000 .comment
+0000000000000000 g     F .text	0000000000000014 add
+0000000000000014 g     F .text	000000000000000b main
+
+
+===============================
+       --strip-program=PROGRAM
+              program used to strip binaries
+指定拆解文件的二进制程序，未验证
+
+===============================
+       -S, --suffix=SUFFIX
+              override the usual backup suffix
+
+===============================
+-S, –suffix=后缀: 自定指定备份文件的后缀
+
+[zhangly@localhost test]$ install 1.c 2.c -S a
+[zhangly@localhost test]$ ls -lrt
+总用量 32
+-rwxr-xr-x. 1 zhangly zhangly   92 2月  28 16:42 1.c
+-rwxr-xr-x. 1 zhangly zhangly 8485 2月  28 16:42 a.out
+-rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:53 1.o
+-rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:57 2.o
+-rwxr-xr-x. 1 zhangly zhangly   92 2月  28 17:06 2.ca
+-rwxr-xr-x. 1 zhangly zhangly   92 2月  28 17:07 2.c
+
+将1.c复制成为2.c，如果原有2.c文件，则将原有2.c的文件备份为后缀设置为a进行备份
+效果如上
+===============================
+       -t, --target-directory=DIRECTORY
+              copy all SOURCE arguments into DIRECTORY
+[zhangly@localhost test]$ mkdir 2
+[zhangly@localhost test]$ tree
+.
+|-- 1.c
+|-- 1.o
+|-- 2
+|-- 2.c
+|-- 2.ca
+|-- 2.o
+`-- a.out
+
+1 directory, 6 files
+[zhangly@localhost test]$ install 1.c 2.c -t 2
+[zhangly@localhost test]$ tree
+.
+|-- 1.c
+|-- 1.o
+|-- 2
+|   |-- 1.c
+|   `-- 2.c
+|-- 2.c
+|-- 2.ca
+|-- 2.o
+`-- a.out
+
+1 directory, 8 files
+===============================
+       -T, --no-target-directory
+              treat DEST as a normal file
+       -T, --no-target-directory
+              treat DEST as a normal file
+将连接转成普通文件
+
+[zhangly@localhost test]$ ls -lrt
+总用量 24
+-rwxr-xr-x. 1 zhangly zhangly 8485 2月  28 16:42 a.out
+-rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:53 1.o
+-rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:57 2.o
+-rwxr-xr-x. 1 zhangly zhangly   92 2月  28 17:07 2.ca
+drwxrwxr-x. 2 zhangly zhangly   26 2月  28 17:18 2
+lrwxrwxrwx. 1 zhangly zhangly    3 2月  28 17:26 1l.o -> 1.o
+[zhangly@localhost test]$ install 1l.o 1n.o -T
+[zhangly@localhost test]$ ls -lrt
+总用量 28
+-rwxr-xr-x. 1 zhangly zhangly 8485 2月  28 16:42 a.out
+-rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:53 1.o
+-rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:57 2.o
+-rwxr-xr-x. 1 zhangly zhangly   92 2月  28 17:07 2.ca
+drwxrwxr-x. 2 zhangly zhangly   26 2月  28 17:18 2
+lrwxrwxrwx. 1 zhangly zhangly    3 2月  28 17:26 1l.o -> 1.o
+-rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 17:27 1n.o
+
+===============================
+-v, –verbose: 处理每个文件/目录时印出名称
+[zhangly@localhost test]$ install 2/1.c 1.c -v
+"2/1.c" -> "1.c"
+输出了详细信息
+
+===============================
+       -P, --preserve-context
+              preserve SELinux security context (-P deprecated)
+未探究
+
+===============================
+       -Z, --context[=CTX]
+              set SELinux security context of destination file to default type, or to CTX if specified
+未探究
+
+===============================
+
