@@ -382,29 +382,7 @@ SYMBOL TABLE:
 ===============================
        -T, --no-target-directory
               treat DEST as a normal file
-       -T, --no-target-directory
-              treat DEST as a normal file
-将连接转成普通文件
-
-[zhangly@localhost test]$ ls -lrt
-总用量 24
--rwxr-xr-x. 1 zhangly zhangly 8485 2月  28 16:42 a.out
--rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:53 1.o
--rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:57 2.o
--rwxr-xr-x. 1 zhangly zhangly   92 2月  28 17:07 2.ca
-drwxrwxr-x. 2 zhangly zhangly   26 2月  28 17:18 2
-lrwxrwxrwx. 1 zhangly zhangly    3 2月  28 17:26 1l.o -> 1.o
-[zhangly@localhost test]$ install 1l.o 1n.o -T
-[zhangly@localhost test]$ ls -lrt
-总用量 28
--rwxr-xr-x. 1 zhangly zhangly 8485 2月  28 16:42 a.out
--rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:53 1.o
--rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 16:57 2.o
--rwxr-xr-x. 1 zhangly zhangly   92 2月  28 17:07 2.ca
-drwxrwxr-x. 2 zhangly zhangly   26 2月  28 17:18 2
-lrwxrwxrwx. 1 zhangly zhangly    3 2月  28 17:26 1l.o -> 1.o
--rwxr-xr-x. 1 zhangly zhangly 1328 2月  28 17:27 1n.o
-
+未探究成功
 ===============================
 -v, –verbose: 处理每个文件/目录时印出名称
 [zhangly@localhost test]$ install 2/1.c 1.c -v
