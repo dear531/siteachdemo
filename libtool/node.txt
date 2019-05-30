@@ -1,0 +1,5 @@
+编译object选项：
+libtool --mode=compile --tag=CC gcc -O -c func.c
+libtool: compile:  gcc -O -c func.c  -fPIC -DPIC -o .libs/func.o
+libtool: compile:  gcc -O -c func.c -o func.o >/dev/null 2>&1
+
