@@ -3,3 +3,51 @@ libtool --mode=compile --tag=CC gcc -O -c func.c
 libtool: compile:  gcc -O -c func.c  -fPIC -DPIC -o .libs/func.o
 libtool: compile:  gcc -O -c func.c -o func.o >/dev/null 2>&1
 
+生成工程文件：
+生成func.及main.o及.lo文件
+$make object 
+libtool --mode=compile --tag=CC gcc -O -c func.c
+libtool: compile:  gcc -O -c func.c  -fPIC -DPIC -o .libs/func.o
+libtool: compile:  gcc -O -c func.c -o func.o >/dev/null 2>&1
+libtool --mode=compile --tag=CC gcc -O -c main.c
+libtool: compile:  gcc -O -c main.c  -fPIC -DPIC -o .libs/main.o
+libtool: compile:  gcc -O -c main.c -o main.o >/dev/null 2>&1
+
+生成库文件：
+生成.a .so 库文件，在.libs下，有-rpath /usr/local/lib则生成共享库
+zhangly@VU16:~/siteachdemo/libtool$ make library 
+libtool --mode=compile --tag=CC gcc -O -c func.c
+libtool: compile:  gcc -O -c func.c  -fPIC -DPIC -o .libs/func.o
+libtool: compile:  gcc -O -c func.c -o func.o >/dev/null 2>&1
+libtool --mode=link --tag=CC gcc -o libfunc.la -g -O func.lo \
+	-rpath /usr/local/lib
+libtool: link: gcc -shared  -fPIC -DPIC  .libs/func.o    -g -O   -Wl,-soname -Wl,libfunc.so.0 -o .libs/libfunc.so.0.0.0
+libtool: link: (cd ".libs" && rm -f "libfunc.so.0" && ln -s "libfunc.so.0.0.0" "libfunc.so.0")
+libtool: link: (cd ".libs" && rm -f "libfunc.so" && ln -s "libfunc.so.0.0.0" "libfunc.so")
+libtool: link: ar cru .libs/libfunc.a  func.o
+ar: `u' modifier ignored since `D' is the default (see `U')
+libtool: link: ranlib .libs/libfunc.a
+libtool: link: ( cd ".libs" && rm -f "libfunc.la" && ln -s "../libfunc.la" "libfunc.la" )
+
+生成可执行文件，通过main.lo及libfunc.la
+$ make binary 
+libtool --mode=compile --tag=CC gcc -O -c main.c
+libtool: compile:  gcc -O -c main.c  -fPIC -DPIC -o .libs/main.o
+libtool: compile:  gcc -O -c main.c -o main.o >/dev/null 2>&1
+libtool --mode=compile --tag=CC gcc -O -c func.c
+libtool: compile:  gcc -O -c func.c  -fPIC -DPIC -o .libs/func.o
+libtool: compile:  gcc -O -c func.c -o func.o >/dev/null 2>&1
+libtool --mode=link --tag=CC gcc -o libfunc.la -g -O func.lo \
+	-rpath /usr/local/lib
+libtool: link: rm -fr  .libs/libfunc.a .libs/libfunc.la .libs/libfunc.lai .libs/libfunc.so .libs/libfunc.so.0 .libs/libfunc.so.0.0.0
+libtool: link: gcc -shared  -fPIC -DPIC  .libs/func.o    -g -O   -Wl,-soname -Wl,libfunc.so.0 -o .libs/libfunc.so.0.0.0
+libtool: link: (cd ".libs" && rm -f "libfunc.so.0" && ln -s "libfunc.so.0.0.0" "libfunc.so.0")
+libtool: link: (cd ".libs" && rm -f "libfunc.so" && ln -s "libfunc.so.0.0.0" "libfunc.so")
+libtool: link: ar cru .libs/libfunc.a  func.o
+ar: `u' modifier ignored since `D' is the default (see `U')
+libtool: link: ranlib .libs/libfunc.a
+libtool: link: ( cd ".libs" && rm -f "libfunc.la" && ln -s "../libfunc.la" "libfunc.la" )
+#libtool --mode=link --tag=CC gcc func.lo main.lo -o a.out
+libtool --mode=link --tag=CC gcc libfunc.la main.lo -o a.out
+libtool: link: gcc .libs/main.o -o .libs/a.out  ./.libs/libfunc.so 
+
