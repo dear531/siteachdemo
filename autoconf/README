@@ -1,0 +1,107 @@
+1.autoscan -- configure.scan
+2.mv configure.scan configure.ac
+edit configure.ac
+  5 AC_INIT(helloword, 1.0, dear531@21cn.com)
+  6 AM_INIT_AUTOMAKE(1.0)
+3.aclocal -- m4
+4.autoconf -- configure
+5.autoheader -- config.h
+6.automake --add-missing : genarate Makefile
+7. ./configure
+8.make
+9. ./helloworld
+
+大致详细过程：
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ls
+Makefile.am  autom4te.cache  main.c
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ git clean -f *
+Removing autom4te.cache/
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ git clean -f * .deps/
+Removing .deps/
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ls
+Makefile.am  main.c
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ls -lrt
+total 0
+-rwxrwxrwx 1 zhangly zhangly 85 Jun  4 11:05 main.c
+-rwxrwxrwx 1 zhangly zhangly 78 Jun  4 11:23 Makefile.am
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ autoscan
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ls
+Makefile.am  autoscan.log  configure.scan  main.c
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim configure.scan
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ls
+Makefile.am  README  autoscan.log  configure.scan  main.c
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ mv configure.scan configure.ac
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim configure.ac
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ aclocal
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ls
+Makefile.am  README  aclocal.m4  autom4te.cache  autoscan.log  configure.ac  main.c
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ls
+Makefile.am  README  aclocal.m4  autom4te.cache  autoscan.log  configure.ac  main.c
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ autoconf
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ fg
+-bash: fg: current: no such job
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ autoheader
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ automake
+configure.ac:11: error: required file './compile' not found
+configure.ac:11:   'automake --add-missing' can install 'compile'
+configure.ac:6: error: required file './install-sh' not found
+configure.ac:6:   'automake --add-missing' can install 'install-sh'
+configure.ac:6: error: required file './missing' not found
+configure.ac:6:   'automake --add-missing' can install 'missing'
+Makefile.am: error: required file './depcomp' not found
+Makefile.am:   'automake --add-missing' can install 'depcomp'
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ automake --add-missing
+configure.ac:11: installing './compile'
+configure.ac:6: installing './install-sh'
+configure.ac:6: installing './missing'
+Makefile.am: installing './depcomp'
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ls
+Makefile.am  README      autom4te.cache  compile      configure     depcomp     main.c
+Makefile.in  aclocal.m4  autoscan.log    config.h.in  configure.ac  install-sh  missing
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ./configure
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables...
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking whether gcc understands -c and -o together... yes
+checking for style of include used by make... GNU
+checking dependency style of gcc... gcc3
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating config.h
+config.status: executing depfiles commands
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ make
+make  all-am
+make[1]: Entering directory '/mnt/e/job/gitstorage/siteachdemo/autoconf'
+gcc -DHAVE_CONFIG_H -I.     -g -O2 -MT main.o -MD -MP -MF .deps/main.Tpo -c -o main.o main.c
+mv -f .deps/main.Tpo .deps/main.Po
+gcc  -g -O2   -o helloworld main.o
+make[1]: Leaving directory '/mnt/e/job/gitstorage/siteachdemo/autoconf'
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ./helloworld
+hello world
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ vim README
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$ ./helloworld
+hello world
+zhangly@DESKTOP-MLS4PHM:~/job/gitstorage/siteachdemo/autoconf$
