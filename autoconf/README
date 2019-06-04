@@ -1,3 +1,4 @@
+0.edit main.c and Makefile.am
 1.autoscan -- configure.scan
 2.mv configure.scan configure.ac
 edit configure.ac
