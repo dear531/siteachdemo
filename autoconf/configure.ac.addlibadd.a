@@ -3,18 +3,18 @@
 
 AC_PREREQ([2.69])
 AC_INIT(helloworld, 1.0, dear531@21cn.com)
-AM_INIT_AUTOMAKE(1.0)
-AC_CONFIG_SRCDIR([add.h])
+AM_INIT_AUTOMAKE
+AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC
 
 # Checks for libraries.
-# FIXME: Replace `main' with a function in `-ladd':
 AC_PROG_LIBTOOL
 AC_PROG_RANLIB
-AC_CHECK_LIB([add], [main])
+# FIXME: Replace `main' with a function in `-lm':
+AC_CHECK_LIB([m], [main])
 
 # Checks for header files.
 
@@ -22,5 +22,6 @@ AC_CHECK_LIB([add], [main])
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+                 src/Makefile])
 AC_OUTPUT
