@@ -7,7 +7,8 @@ edit configure.ac
 3.aclocal -- m4
 4.autoconf -- configure
 5.autoheader -- config.h
-6.automake --add-missing : genarate Makefile
+6.automake --add-missing (or automake -a): genarate Makefile
+6.1 libtoolize --automake --copy --debug --force
 7. ./configure
 8.make
 9. ./helloworld
